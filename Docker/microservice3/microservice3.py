@@ -62,8 +62,8 @@ async def process_faces(frames: list[UploadFile] = File(...), timestamps: list[U
             if name != 'unknown':
                 embedding_list = embedding.tolist()
                 # Encode the frame to JPEG and then to base64
-                retval, buffer = cv2.imencode('.jpg', frame)
-                if retval:
+                ret, buffer = cv2.imencode('.jpg', frame)
+                if ret:
                     jpg_as_text = base64.b64encode(buffer).decode()
                 else:
                     raise ValueError("Could not encode image to JPEG")
@@ -73,7 +73,6 @@ async def process_faces(frames: list[UploadFile] = File(...), timestamps: list[U
                     "timestamp": timestamp,
                     "frame": jpg_as_text
                 }
-                print("Sending data to the fourth service:", data)
                 response = requests.post("http://microservice4:8004/process_data", json=data)
                 print(f"Match found: {name} at {timestamp}")
                 print(f"Response from fourth service: {response.status_code}, {response.text}")

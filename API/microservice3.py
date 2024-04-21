@@ -62,8 +62,8 @@ async def process_faces(frames: list[UploadFile] = File(...), timestamps: list[U
             if name != 'unknown':
                 embedding_list = embedding.tolist()
                 # Encode the frame to JPEG and then to base64
-                retval, buffer = cv2.imencode('.jpg', frame)
-                if retval:
+                ret, buffer = cv2.imencode('.jpg', frame)
+                if ret:
                     jpg_as_text = base64.b64encode(buffer).decode()
                 else:
                     raise ValueError("Could not encode image to JPEG")
