@@ -32,6 +32,8 @@ async def read_video(file: UploadFile = File(...)):
     # Initialize variables
     frame_index = 0
     files = []
+    
+    # because FastApi only permit 1000 data send in 1 request we use batch for send data if data is larger than 1000
     batch_size = 500  # Number of frames per batch for processing
 
     # Process the video
