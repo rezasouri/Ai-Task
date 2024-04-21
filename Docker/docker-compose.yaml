@@ -1,0 +1,53 @@
+version: "3"  # Using a more recent version for better features
+
+services:
+  microservice1:
+    build: ./microservice1
+    command: sh -c "uvicorn microservice1:app --reload --port=8000 --host=0.0.0.0"
+    ports:
+      - "8000:8000"
+    environment:
+      - SERVICE_NAME=microservice1
+    networks:
+      - microservice-net
+
+  microservice2:
+    build: ./microservice2
+    command: sh -c "uvicorn microservice2:app --reload --port=8001 --host=0.0.0.0"  # Fixed typo in 'second_stage'
+    ports:
+      - "8001:8001"  # Corrected to reflect external port correctly
+    environment:
+      - SERVICE_NAME=microservice2
+    networks:
+      - microservice-net
+    depends_on:
+      - microservice1  # Ensures start-up order
+
+  microservice3:
+    build: ./microservice3
+    command: sh -c "uvicorn microservice3:app --reload --port=8003 --host=0.0.0.0"  # Changed port to 8002 for consistency
+    ports:
+      - "8003:8003"
+    environment:
+      - SERVICE_NAME=microservice3
+    networks:
+      - microservice-net
+    depends_on:
+      - microservice2  # Ensures start-up order
+
+  microservice4:
+    build: ./microservice4
+    command: sh -c "uvicorn microservice4:app --reload --port=8004 --host=0.0.0.0"  # Corrected 'forth' to 'fourth'
+    ports:
+      - "8004:8004"
+    environment:
+      - SERVICE_NAME=microservice4
+    networks:
+      - microservice-net
+    depends_on:
+      - microservice3  # Ensures start-up order
+
+networks:
+  microservice-net:
+    driver: bridge  # Using a bridge driver for the dedicated network
+
